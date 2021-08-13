@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    hikari:
+      driver-class-name: org.postgresql.Driver
+      username: postgres
+      password: 1234
+    url: jdbc:postgresql://localhost:5432/temp?stringtype=unspecified
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
