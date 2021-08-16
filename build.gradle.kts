@@ -35,12 +35,23 @@ dependencies {
     testImplementation("org.testcontainers:postgresql")
 }
 
+val testContainerVersion by extra {
+    "1.15.1"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.testcontainers:testcontainers-bom:$testContainerVersion")
+    }
+}
+
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "11"
     }
 }
+
 
 tasks.withType<Test> {
     useJUnitPlatform()

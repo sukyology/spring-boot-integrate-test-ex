@@ -4,8 +4,9 @@ spring:
       username: postgres
       password: 1234
     url: jdbc:tc:postgresql:///test-database?stringtype=unspecified
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    show-sql: true

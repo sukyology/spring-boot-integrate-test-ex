@@ -10,9 +10,10 @@ import org.springframework.boot.test.web.client.postForObject
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.context.TestPropertySource
 import org.springframework.transaction.annotation.Transactional
+import org.testcontainers.containers.PostgreSQLContainer
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@TestPropertySource(properties = ["spring.profiles.active=test"]) // can override any propertysource
+@TestPropertySource(properties = ["spring.profiles.active=test"]) // can override any propertysource
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL) // autowire without @autowired
 class SpringBootIntegrateTestExApplicationTests(
     private val teamRepository: TeamRepository,
@@ -29,7 +30,13 @@ class SpringBootIntegrateTestExApplicationTests(
     }
 
     companion object {
-//        @JvmStatic
-//        protected val dbContainer = PostgreSQLCon
+        @JvmStatic
+        protected val dbContainer = PostgreSQLContainer<Nothing>("postgres:latest").apply {
+            withDatabaseName("test-database")
+        }
+
+        init {
+            dbContainer.start()
+        }
     }
 }
