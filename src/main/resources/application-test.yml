@@ -1,10 +1,6 @@
 spring:
   datasource:
-    hikari:
-      username: postgres
-      password: 1234
-    url: jdbc:tc:postgresql:///test-database?stringtype=unspecified
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: create

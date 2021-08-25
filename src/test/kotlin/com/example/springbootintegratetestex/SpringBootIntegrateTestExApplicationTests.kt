@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.client.postForObject
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.context.TestPropertySource
 import org.springframework.transaction.annotation.Transactional
@@ -24,6 +26,7 @@ class SpringBootIntegrateTestExApplicationTests(
     @Transactional
     fun contextLoads() {
         println("context loads")
+        println(dbContainer.containerInfo)
         val response = restTemplate.postForObject<TeamResponse>("/team")
         println(response?.id)
 
@@ -31,8 +34,16 @@ class SpringBootIntegrateTestExApplicationTests(
 
     companion object {
         @JvmStatic
-        protected val dbContainer = PostgreSQLContainer<Nothing>("postgres:latest").apply {
+        protected val dbContainer = PostgreSQLContainer<Nothing>("postgres:13.4-alpine").apply {
             withDatabaseName("test-database")
+        }
+
+        @JvmStatic
+        @DynamicPropertySource
+        fun datasourceConfig(registry: DynamicPropertyRegistry) {
+            registry.add("spring.datasource.url", dbContainer::getJdbcUrl)
+            registry.add("spring.datasource.password", dbContainer::getPassword)
+            registry.add("spring.datasource.username", dbContainer::getUsername)
         }
 
         init {
