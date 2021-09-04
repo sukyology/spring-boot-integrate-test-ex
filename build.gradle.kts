@@ -23,6 +23,7 @@ repositories {
 }
 
 dependencies {
+    val kotestVersion = "4.6.1"
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -30,13 +31,26 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+    implementation("net.ttddyy:datasource-proxy:1.7")
+
+    //기본적인 spring test dependencies 존재 가정
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.0.0")
+
+
+
+
+
+
+
 }
 
 val testContainerVersion by extra {
-    "1.15.1"
+    "1.16.0"
 }
 
 dependencyManagement {
