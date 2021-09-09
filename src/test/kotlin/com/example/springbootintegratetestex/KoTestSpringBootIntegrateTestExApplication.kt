@@ -7,6 +7,7 @@ import io.kotest.core.extensions.Extension
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.shouldBe
+import net.ttddyy.dsproxy.QueryCountHolder
 import net.ttddyy.dsproxy.listener.ChainListener
 import net.ttddyy.dsproxy.listener.DataSourceQueryCountListener
 import net.ttddyy.dsproxy.listener.logging.SLF4JQueryLoggingListener
@@ -42,6 +43,7 @@ class KoTestSpringBootIntegrateTestExApplication(
             }
         }
 
+        //테스트로 인식을 못함
         "data 생성" should {
 
             teamRepository.save(Team(
@@ -50,6 +52,12 @@ class KoTestSpringBootIntegrateTestExApplication(
                 players.add(Player())
                 players.add(Player())
             })
+
+            val queryCount = QueryCountHolder.getGrandTotal().total
+
+            println(queryCount)
+
+            queryCount shouldBe 4
 
             
         }

@@ -1,8 +1,11 @@
 package com.example.springbootintegratetestex
 
 import com.example.springbootintegratetestex.api.TeamResponse
+import com.example.springbootintegratetestex.persistence.Player
 import com.example.springbootintegratetestex.persistence.Team
 import com.example.springbootintegratetestex.persistence.TeamRepository
+import io.kotest.matchers.shouldBe
+import net.ttddyy.dsproxy.QueryCountHolder
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
@@ -30,6 +33,23 @@ class SpringBootIntegrateTestExApplicationTests(
         val response = restTemplate.postForObject<TeamResponse>("/team")
         println(response?.id)
 
+    }
+
+    @Test
+    @Transactional
+    fun dbDataProxy() {
+        teamRepository.save(Team(
+        ).apply {
+            players.add(Player())
+            players.add(Player())
+            players.add(Player())
+        })
+
+        val queryCount = QueryCountHolder.getGrandTotal().insert
+
+        println(queryCount)
+
+        queryCount shouldBe 4
     }
 
     companion object {
