@@ -16,7 +16,9 @@ class Team {
 interface TeamRepository: JpaRepository<Team, Long>
 
 @Entity
-class Player {
+class Player(
+    val name: String = "익명"
+) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +29,4 @@ class Player {
     lateinit var team: Team
 }
 
-interface PlayerRepository: JpaRepository<Team, Long>
+interface PlayerRepository: JpaRepository<Player, Long>

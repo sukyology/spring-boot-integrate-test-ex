@@ -11,12 +11,14 @@ import org.aopalliance.intercept.MethodInvocation
 import org.springframework.aop.framework.ProxyFactory
 import org.springframework.beans.factory.config.BeanPostProcessor
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.util.ReflectionUtils
 import javax.sql.DataSource
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 
 @Configuration
+@Profile("test")
 class DatasourceProxyBeanPostProcessor : BeanPostProcessor {
     override fun postProcessAfterInitialization(bean: Any, beanName: String): Any? {
         if (bean is DataSource && bean !is ProxyDataSource) {

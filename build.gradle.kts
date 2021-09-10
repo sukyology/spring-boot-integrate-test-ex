@@ -6,6 +6,8 @@ plugins {
     kotlin("jvm") version "1.5.21"
     kotlin("plugin.spring") version "1.5.21"
     kotlin("plugin.jpa") version "1.5.21"
+    kotlin("plugin.allopen") version "1.5.21"
+    idea
 }
 
 group = "com.example"
@@ -69,4 +71,11 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+allOpen {
+    val packageName = "javax.persistence."
+    annotation("${packageName}Entity")
+    annotation("${packageName}Embeddable")
+    annotation("${packageName}MappedSuperclass")
 }

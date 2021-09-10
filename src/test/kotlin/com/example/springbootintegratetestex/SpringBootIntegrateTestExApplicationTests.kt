@@ -2,6 +2,7 @@ package com.example.springbootintegratetestex
 
 import com.example.springbootintegratetestex.api.TeamResponse
 import com.example.springbootintegratetestex.persistence.Player
+import com.example.springbootintegratetestex.persistence.PlayerRepository
 import com.example.springbootintegratetestex.persistence.Team
 import com.example.springbootintegratetestex.persistence.TeamRepository
 import io.kotest.matchers.shouldBe
@@ -14,6 +15,7 @@ import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.context.TestPropertySource
+import org.springframework.test.context.transaction.TestTransaction
 import org.springframework.transaction.annotation.Transactional
 import org.testcontainers.containers.PostgreSQLContainer
 
@@ -22,6 +24,7 @@ import org.testcontainers.containers.PostgreSQLContainer
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL) // autowire without @autowired
 class SpringBootIntegrateTestExApplicationTests(
     private val teamRepository: TeamRepository,
+    private val playerRepository: PlayerRepository,
     private val restTemplate: TestRestTemplate
 ) {
 
@@ -40,16 +43,25 @@ class SpringBootIntegrateTestExApplicationTests(
     fun dbDataProxy() {
         teamRepository.save(Team(
         ).apply {
-            players.add(Player())
-            players.add(Player())
-            players.add(Player())
+            players.add(Player("돌다리").also { it.team = this })
+            players.add(Player().also { it.team = this })
+            players.add(Player().also { it.team = this })
         })
 
-        val queryCount = QueryCountHolder.getGrandTotal().insert
+        val insertCount = QueryCountHolder.getGrandTotal().insert
 
-        println(queryCount)
+        insertCount shouldBe 4
 
-        queryCount shouldBe 4
+        TestTransaction.flagForCommit()
+        TestTransaction.end()
+        TestTransaction.start()
+
+        val team = teamRepository.findAll().first()
+        val playerNames = team.players.map { it.name }
+
+        val queryCount = QueryCountHolder.getGrandTotal().select
+
+        queryCount shouldBe 1
     }
 
     companion object {

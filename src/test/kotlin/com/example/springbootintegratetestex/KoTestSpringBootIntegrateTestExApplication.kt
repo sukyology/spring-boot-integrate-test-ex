@@ -53,11 +53,16 @@ class KoTestSpringBootIntegrateTestExApplication(
                 players.add(Player())
             })
 
-            val queryCount = QueryCountHolder.getGrandTotal().total
+            val insertCount = QueryCountHolder.getGrandTotal().insert
 
-            println(queryCount)
+            insertCount shouldBe 4
 
-            queryCount shouldBe 4
+            val team = teamRepository.findAll()
+
+            val queryCount = QueryCountHolder.getGrandTotal().select
+
+            queryCount shouldBe 1
+
 
             
         }
